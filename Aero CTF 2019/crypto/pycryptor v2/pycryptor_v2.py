@@ -28,14 +28,9 @@ class Crc:
 	def intialVal( self, byte ):
 		crc = 0
 		byte = byte << 8
-		
-		for j in range( 8 ):
-		
-			if (crc ^ byte) & 0x8000:
-				crc = (crc << 1) ^ self.m_poly
-			else:
-				crc = crc << 1
-		
+
+		for _ in range( 8 ):
+			crc = (crc << 1) ^ self.m_poly if (crc ^ byte) & 0x8000 else crc << 1
 			byte = byte << 1
 
 		return crc
@@ -95,8 +90,8 @@ class Cipher:
 
 	def __init__( self, buf, key, filename ):
 		self.m_buf = buf
-		self.m_key = key	
-		self.m_encFileName = filename + ".enc"
+		self.m_key = key
+		self.m_encFileName = f"{filename}.enc"
 
 		self.initTable()
 
@@ -106,7 +101,7 @@ class Cipher:
 
 		random.seed( seed )
 
-		for i in range( 32 ):
+		for _ in range( 32 ):
 			self.m_table.append( random.randint( 0, 255 ) )
 
 	def viewTable( self ):
@@ -141,21 +136,20 @@ class Cipher:
 		return gamma
 
 	def writeBlock2File( self, block ):
-		fd = open( self.m_encFileName, 'ab' )
-		fd.write( block )
-		fd.close()
+		with open( self.m_encFileName, 'ab' ) as fd:
+			fd.write( block )
 
 	def encode( self ):
 		self.parseData()
 
 		for i in range( len( self.m_blocks ) ):
-			enc_block = ''
 			block = self.m_blocks[ i ]
 			gamma = self.getGamma( block[:16] )
 			crc = Crc()( block )
 
-			for j in range( len( gamma ) ):
-				enc_block += chr( ord( block[ j ] ) ^ ord( gamma[ j ] ) )
+			enc_block = ''.join(
+				chr(ord(block[j]) ^ ord(gamma[j])) for j in range(len(gamma))
+			)
 
 			gamma = self.getGamma( block[16:] )
 
@@ -190,11 +184,7 @@ def GetFileData( filename ):
 		return buf
 
 def checkKeySymbols( key ):
-	for i in key:
-		if i not in "01234567890abcdef":
-			return True
-
-	return False
+	return any(i not in "01234567890abcdef" for i in key)
 
 if __name__ == "__main__":
 

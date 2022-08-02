@@ -5,7 +5,7 @@ flag = open('flag.txt').read().strip()
 class PRNG():
 	def __init__(self):
 		self.seed = self.getseed()
-		self.iv = int(bin(self.seed)[2:].zfill(64)[0:32], 2)
+		self.iv = int(bin(self.seed)[2:].zfill(64)[:32], 2)
 		self.key = int(bin(self.seed)[2:].zfill(64)[32:64], 2)
 		self.mask = int(bin(self.seed)[2:].zfill(64)[64:96], 2)
 		self.aux = 0
@@ -35,9 +35,7 @@ class PRNG():
 		return (x & 255)
 
 def encrypt(s):
-	o=''
-	for x in s:
-		o += chr(ord(x) ^ p.next_byte())
+	o = ''.join(chr(ord(x) ^ p.next_byte()) for x in s)
 	return o.encode('hex')
 
 p=PRNG()

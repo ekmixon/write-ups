@@ -5,7 +5,7 @@ import requests
 
 
 def extract_number(html):
-    number = re.search('<br>(\d+)<br>', html).group(1)
+    number = re.search('<br>(\d+)<br>', html)[1]
     return int(number)
 
 
@@ -15,7 +15,7 @@ def detect_period(url, session):
         html = session.get(url).text
         number = extract_number(html)
         if number in numbers:
-            print('FOUND PERIOD: ' + str(len(numbers)))
+            print(f'FOUND PERIOD: {len(numbers)}')
             break
         numbers.append(number)
     index = numbers.index(number)
@@ -28,6 +28,6 @@ if __name__ == '__main__':
     session = requests.session()
     numbers = detect_period(url, session)
     print('PHPSESSID=' + session.cookies['PHPSESSID'])
-    print('NEXT {} NUMBERS ARE:'.format(numbers_count))
+    print(f'NEXT {numbers_count} NUMBERS ARE:')
     for i in range(numbers_count):
         print(numbers[i]) 

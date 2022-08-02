@@ -19,7 +19,7 @@ class DSA():
 		return (r, s)
 
 	def verify(self, m, r, s):
-		if 0 < r and r < self.q and 0 < s and s < self.q:
+		if r > 0 and r < self.q and s > 0 and s < self.q:
 			h = int(hashlib.md5(m).hexdigest(), 16)
 			w = gmpy2.invert(s, self.q)
 			u1 = (h * w) % self.q

@@ -45,8 +45,7 @@ def solve(r, n, e, c):
     nn = n * n
     r_e = pow(r, e, nn)
     c = (c * gmpy2.invert(r_e, nn)) % nn
-    m = ((c - r ** 2) % nn) // n
-    return m
+    return ((c - r ** 2) % nn) // n
 
 def crack_r(p, n, e, c):
     q = n // p

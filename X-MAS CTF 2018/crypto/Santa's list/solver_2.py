@@ -61,12 +61,10 @@ def get_flag(flag, e, N, i):
 if __name__ == "__main__":
     e = 65537
     l = 710
-    
+
     for i in range(272, l):
         rc, N = get_N()
         flag = decrypt_flag(rc, e, N, i)
         if flag:
             break
         rc.close()
-    
-    print 'Flag is {}'.format(flag)

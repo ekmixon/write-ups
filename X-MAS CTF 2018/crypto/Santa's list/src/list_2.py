@@ -29,11 +29,11 @@ print('Your list for this year:\n')
 print('Sarah - Nice')
 print('Bob - Nice')
 print('Eve - Naughty')
-print('Galf - ' + hex(flag_encrypted)[2:])
+print(f'Galf - {hex(flag_encrypted)[2:]}')
 print('Alice - Nice')
 print('Johnny - Naughty')
 
-for i in range(5):
+for _ in range(5):
     choice = menu()
 
     if choice == '1':
@@ -50,12 +50,12 @@ for i in range(5):
 
         else:
             m = decrypt(c)
-            
+
             for no in used:
                 if m % no == 0:
                     print('Ho, ho, no...')
                     break
-                
+
             else:
                 print('\nDecrypted: ' + str(m))
 

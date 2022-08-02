@@ -17,8 +17,7 @@ def genKey(k):
 
 def encrypt(m,pubkey):
 
-	c=m**2 % pubkey
-	return c
+	return m**2 % pubkey
 
 privkey,pubkey = genKey(256)
 
@@ -30,10 +29,10 @@ flag = int(flag.encode('hex'),16)
 ct=encrypt(flag,pubkey)
 
 with open('flag.enc','w') as f:
-	f.write('ct = ' + str(ct))
+	f.write(f'ct = {str(ct)}')
 
 with open('pubkey.txt','w') as f:
-	f.write('pubkey = ' + str(pubkey))
+	f.write(f'pubkey = {str(pubkey)}')
 
 with open('privkey.txt','w') as f:
-	f.write('privkey = ' + str(privkey))
+	f.write(f'privkey = {str(privkey)}')

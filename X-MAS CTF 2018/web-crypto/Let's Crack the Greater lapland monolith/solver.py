@@ -43,27 +43,25 @@ def crack_unknown_modulus(states):
 
 def recover_lcg(session):
     numbers = []
-    for i in range(recover_size):
+    for _ in range(recover_size):
         html = session.get(url.format(1)).text
-        number = int(re.search('<br>(\d+)<br>', html).group(1))
+        number = int(re.search('<br>(\d+)<br>', html)[1])
         numbers.append(number)
     modulus, multiplier, increment = crack_unknown_modulus(numbers)
-    lcg = LCG(modulus, multiplier, increment, numbers[-1])
-    return lcg
+    return LCG(modulus, multiplier, increment, numbers[-1])
 
 
 def obtain_flag(lcg, session):
-    numbers = [lcg.next() for i in range(streak_count)]
+    numbers = [lcg.next() for _ in range(streak_count)]
     for number in numbers:
         html = session.get(url.format(number)).text
-        match = re.search('X-MAS\{.*?\}', html)
-        if match:
-            return match.group(0)
+        if match := re.search('X-MAS\{.*?\}', html):
+            return match[0]
 
 
 if __name__ == '__main__':
     session = requests.session()
     lcg = recover_lcg(session)
-    print('modulus={}, multiplier={}, increment={}'.format(lcg.m, lcg.a, lcg.c))
+    print(f'modulus={lcg.m}, multiplier={lcg.a}, increment={lcg.c}')
     flag = obtain_flag(lcg, session)
     print(flag)

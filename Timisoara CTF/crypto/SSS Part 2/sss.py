@@ -9,12 +9,13 @@ class SSS:
 
     # splits a secret into N parts so that at least T shares are needed to reconstruct the secret
     def split_secret(self, secret):
-        shares = []
-
-        for i in range(self.N):
-            shares.append({"x":i+1, "y":self.compute_poly_value(i+1, secret, self.coefficients)})
-
-        return shares
+        return [
+            {
+                "x": i + 1,
+                "y": self.compute_poly_value(i + 1, secret, self.coefficients),
+            }
+            for i in range(self.N)
+        ]
 
     # reconstruct secret given enough shares
     def join_shares(self, shares):

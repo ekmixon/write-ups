@@ -10,7 +10,7 @@ def xor(data, key):
 
 def randkey():
     key = b''
-    for n in range(randint(128, 255)):
+    for _ in range(randint(128, 255)):
         key += bytes([randint(0, 255)])
     return key
 

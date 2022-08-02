@@ -52,9 +52,7 @@ def shift_right(bit_string,n):
     return(''.join(front_append+bit_list))
 
 def addition(input_set):
-    value=0
-    for i in range(len(input_set)):
-        value+=input_set[i]
+    value = sum(input_set[i] for i in range(len(input_set)))
     mod_32 = 4294967296
     return(value%mod_32)
 
@@ -102,7 +100,7 @@ def data_encrypted(list_of_pixels):
 	return data
 
 def message_pad(bit_list):
-    pad_one = bit_list + '1'
+    pad_one = f'{bit_list}1'
     pad_len = len(pad_one)
     k=0
     while ((pad_len+k)-448)%512 != 0:
@@ -112,9 +110,7 @@ def message_pad(bit_list):
     return(pad_one+back_append_0+back_append_1)
 
 def message_bit_return(string_input):
-    bit_list=[]
-    for i in range(len(string_input)):
-        bit_list.append(bin_8bit(ord(string_input[i])))
+    bit_list = [bin_8bit(ord(string_input[i])) for i in range(len(string_input))]
     return(''.join(bit_list))
 
 def message_pre_pro(input_string):
@@ -125,8 +121,16 @@ def message_parsing(input_string):
     return(some_LP(message_pre_pro(input_string),32))
 
 def message_schedule(index,w_t):
-    new_word = convert_32bit(addition([int(some_s1(w_t[index-2]),2),int(w_t[index-7],2),int(some_s0(w_t[index-15]),2),int(w_t[index-16],2)]))
-    return(new_word)
+    return convert_32bit(
+        addition(
+            [
+                int(some_s1(w_t[index - 2]), 2),
+                int(w_t[index - 7], 2),
+                int(some_s0(w_t[index - 15]), 2),
+                int(w_t[index - 16], 2),
+            ]
+        )
+    )
 
 initial=['6a09e667','bb67ae85','3c6ef372','a54ff53a','510e527f','9b05688c','1f83d9ab','5be0cd19']
 
@@ -142,7 +146,7 @@ def encryption(input_string):
     f=convert_32bit(dec_return_hex(initial[5]))
     g=convert_32bit(dec_return_hex(initial[6]))
     h=convert_32bit(dec_return_hex(initial[7]))
-    for i in range(0,64):
+    for i in range(64):
         if i <= 15:
             t_1=addition([int(h,2),int(some_e1(e),2),int(not_and_and_xor(e,f,g),2),int(values[i],16),int(w_t[i],2)])
             t_2=addition([int(some_e0(a),2),int(and_and_and_xor_xor(a,b,c),2)])
@@ -178,11 +182,18 @@ def encryption(input_string):
     value_5 = addition([dec_return_hex(initial[5]),int(f,2)])
     value_6 = addition([dec_return_hex(initial[6]),int(g,2)])
     value_7 = addition([dec_return_hex(initial[7]),int(h,2)])
-    value = (hex_return(value_0),hex_return(value_1),hex_return(value_2),hex_return(value_3),hex_return(value_4),hex_return(value_5),hex_return(value_6),hex_return(value_7))
-    return(value)
+    return (
+        hex_return(value_0),
+        hex_return(value_1),
+        hex_return(value_2),
+        hex_return(value_3),
+        hex_return(value_4),
+        hex_return(value_5),
+        hex_return(value_6),
+        hex_return(value_7),
+    )
 
 list_pixels = get_pixels_list('./flag3.png')
 data = data_encrypted(list_pixels)
-f = open('./encrypted3.txt','w')
-f.write(data)
-f.close()
+with open('./encrypted3.txt','w') as f:
+    f.write(data)

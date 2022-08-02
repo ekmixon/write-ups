@@ -41,19 +41,19 @@ def find_msgs():
 
 if __name__ == "__main__":
     for i, text in find_msgs():
-        with open('l_{}'.format(i), 'wb') as f:
+        with open(f'l_{i}', 'wb') as f:
             f.write(text)
 
     res = [0]
     with open('l_0', 'rb') as f: 
         original = f.read()
-    
+
     for i in range(1,128):
-        with open('l_{}'.format(i), 'rb') as f: 
+        with open(f'l_{i}', 'rb') as f: 
             shifted = f.read()
-        
-        or_blocks = [original[KEY_LEN*x:KEY_LEN*(x+1)] for x in range(0,2)]
-        sh_blocks = [shifted[(KEY_LEN+i)*x:(KEY_LEN+i)*(x+1)] for x in range(0,2)]
+
+        or_blocks = [original[KEY_LEN*x:KEY_LEN*(x+1)] for x in range(2)]
+        sh_blocks = [shifted[(KEY_LEN+i)*x:(KEY_LEN+i)*(x+1)] for x in range(2)]
 
         H1 = xor_bytetrings(*or_blocks)
         H2 = xor_bytetrings(*sh_blocks)

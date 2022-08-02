@@ -6,8 +6,8 @@ from string import ascii_lowercase
 
 def search(img, start_x, start_y, need_color, fix_x = False, fix_y = False):
     found = False
-    for y in range(start_y, img.height) if not fix_y else [start_y]:
-        for x in range(start_x, img.width) if not fix_x else [start_x]:
+    for y in [start_y] if fix_y else range(start_y, img.height):
+        for x in [start_x] if fix_x else range(start_x, img.width):
             color = img.getpixel((x, y)) == 0
             if color and need_color or (not color and not need_color):
                 found = True
@@ -76,7 +76,7 @@ def scan(img):
 
 
 def translate(lines):
-    alpha = dict()
+    alpha = {}
     index = 0
     text = ''
     for line in lines:
@@ -92,7 +92,7 @@ def translate(lines):
 def main():
     img = Image.open('wishlist.png').convert('1', dither=False)
     lines = scan(img)
-    print('lines count = {}'.format(len(lines)))
+    print(f'lines count = {len(lines)}')
     print(translate(lines))
 
 

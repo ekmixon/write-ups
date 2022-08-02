@@ -8,17 +8,16 @@ def main():
     decoded_ciphertext = b64decode(ciphertext)
     plain = '{"name": "a", "show_flag": false}'
     plain_des = '{"name": "a", "show_flag": true }'
-    for i in range(0, 16):
+    for i in range(16):
         by = bytes([ord(plain[i + 16]) ^ decoded_ciphertext[i + 16] ^ ord(plain_des[i + 16])])
         print(plain_des[i + 16], plain[i + 16])
         decoded_ciphertext = decoded_ciphertext[:i + 16] + by + decoded_ciphertext[i + 1 + 16:]
     reg = re.compile(r"can't decode byte (.+?) in position (.+?):")
-    for pos in range(0, 16):
+    for pos in range(16):
         print(pos)
-        for i in range(0, 256):
+        for i in range(256):
             data = decoded_ciphertext[:pos] + bytes(bytearray([i])) + decoded_ciphertext[pos + 1:]
-            val = make_request(b64encode(data).decode(), reg, pos)
-            if val:
+            if val := make_request(b64encode(data).decode(), reg, pos):
                 val = int(val, 16)
                 res = bytes([(val ^ i) ^ ord(plain[pos])])
                 decoded_ciphertext = decoded_ciphertext[:pos] + res + decoded_ciphertext[pos + 1:]
